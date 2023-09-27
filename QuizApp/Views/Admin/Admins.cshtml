@@ -1,0 +1,49 @@
+﻿@model IEnumerable<InfraStructure.ViewModels.AdminVm>
+
+@{
+    ViewData["Title"] = "Admins";
+}
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Admins</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-area="" asp-controller="Admin" asp-action="AdminCreate">Add New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                    <a class="btn btn-outline-danger" asp-area="" asp-controller="Admin" asp-action="AdminDelete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-outline-primary" asp-area="" asp-controller="Admin" asp-action="AdminUpdate" asp-route-id="@item.Id">edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
