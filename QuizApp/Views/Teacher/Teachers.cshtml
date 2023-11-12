@@ -1,0 +1,120 @@
+﻿@using InfraStructure.Pagination;
+@using InfraStructure.ViewModels;
+@model ListPagerVm<TeacherVm>
+
+@{
+    ViewData["Title"] = "Teachers";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@{
+    IEnumerable<TeacherVm> m = Model.list;
+    var pagerModel = Model.pager;
+
+    //making object of Pager class and asssign properties from pagerModel
+    var pager = new Pager();
+
+    int pageNo = 0;
+    if (pagerModel != null)
+    {
+        pager = pagerModel;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<h3>Teachers</h3>
+
+<p>
+    <a class="btn btn-outline-success" asp-area="" asp-controller="Teacher" asp-action="TeacherCreate">Add New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               #
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Image)
+            </th>
+            <th>Action</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (m != null && m.Count() > 0)
+        {
+            int index = 1;
+            @foreach (var item in m)
+            {
+                <tr>
+                    <td>
+                        @index
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        <img class="studentImage" decoding="async" src="@("~/Images/"+item.Image)" asp-append-version="true" style="height:100px;width:100px;border-radius:50%" />
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-area="" asp-controller="Teacher" asp-action="TeacherDelete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-warning" asp-area="" asp-controller="Teacher" asp-action="TeacherUpdate" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-warning" asp-area="" asp-controller="Teacher" asp-action="TeacherDetails" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+
+                index++;
+
+            }
+        }
+    </tbody>
+</table>
+
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-end">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Teacher" asp-action="Teachers" asp-route-pg="1">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Teacher" asp-action="Teachers" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                </li>
+
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="Teacher" asp-action="Teachers" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Teacher" asp-action="Teachers" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Teacher" asp-action="Teachers" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+
+            }
+
+        </ul>
+    }
+
+</div>

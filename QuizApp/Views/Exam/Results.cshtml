@@ -1,0 +1,33 @@
+﻿@model IEnumerable<InfraStructure.ViewModels.SetExamVm>
+
+@{
+    ViewData["Title"] = "Results";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@*@{
+    List<string> names = (List<string>)ViewData["ExamsNames"];
+} *@
+
+<h3>Results</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Results" method="post">
+            <div class="form-group">
+                <label class="control-label"><h6>Select Quiz</h6></label>
+                <select class="form-control" name="resultList" required>
+                    <option value="">Select Quiz</option>
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.ExamName">@item.ExamName</option>
+                    }
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Show" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

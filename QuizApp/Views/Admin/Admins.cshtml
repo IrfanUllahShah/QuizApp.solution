@@ -1,13 +1,28 @@
-﻿@model IEnumerable<InfraStructure.ViewModels.AdminVm>
+﻿@using InfraStructure.Pagination;
+@using InfraStructure.ViewModels;
+@model ListPagerVm<AdminVm>
 
 @{
     ViewData["Title"] = "Admins";
-}
-@{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+@{
+    IEnumerable<AdminVm> m = Model.list;
+    var pagerModel = Model.pager;
 
-<h1>Admins</h1>
+    //making object of Pager class and asssign properties from pagerModel
+    var pager = new Pager();
+
+    int pageNo = 0;
+    if (pagerModel != null)
+    {
+        pager = pagerModel;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<h3>Admins</h3>
 
 <p>
     <a class="btn btn-outline-success" asp-area="" asp-controller="Admin" asp-action="AdminCreate">Add New</a>
@@ -16,22 +31,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+               #
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Username)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Password)
             </th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        
+        @{
+            int index = 1;
+            foreach (var item in m) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+               @index
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
@@ -41,9 +59,50 @@
             </td>
             <td>
                     <a class="btn btn-outline-danger" asp-area="" asp-controller="Admin" asp-action="AdminDelete" asp-route-id="@item.Id">Delete</a>
-                    <a class="btn btn-outline-primary" asp-area="" asp-controller="Admin" asp-action="AdminUpdate" asp-route-id="@item.Id">edit</a>
+      
             </td>
         </tr>
-}
+        index++;
+}}
     </tbody>
 </table>
+
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-end">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Admin" asp-action="Admins" asp-route-pg="1">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Admin" asp-action="Admins" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                </li>
+
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Admins" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Admin" asp-action="Admins" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Admin" asp-action="Admins" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+
+            }
+
+        </ul>
+    }
+
+</div>

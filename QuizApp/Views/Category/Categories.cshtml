@@ -1,0 +1,88 @@
+﻿@using InfraStructure.Pagination;
+@using InfraStructure.ViewModels;
+@model ListPagerVm<CategoryVm>
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@{
+    IEnumerable<CategoryVm> m = Model.list;
+    var pagerModel = Model.pager;
+
+    //making object of Pager class and asssign properties from pagerModel
+    var pager = new Pager();
+
+    int pageNo = 0;
+    if (pagerModel != null)
+    {
+        pager = pagerModel;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<h3>All Courses</h3>
+
+<p>
+    <a class="btn btn-outline-success" asp-area="" asp-controller="Category" asp-action="CategoryCreate">Add New</a>
+</p>
+
+<div class="container">
+    <div class="row">
+        @foreach (var category in m)
+        {
+            <div class="card text-white bg-dark mb-3 category-divs">
+                <a class="category-title-anchor-tag" asp-action="CategoryQuestions" asp-controller="Category" asp-route-id="@category.Id"> <div class="card-header"> <h4 class="card-title">@category.Name</h4></div></a>
+                <div class="card-body">
+                   @* <h4 class="card-title">@category.Name</h4>*@
+                    <p class="card-text">@Html.Raw(category.Description)</p>
+                </div>
+                <a class="btn btn-danger" asp-area="" asp-controller="Category" asp-action="CategoryDelete" asp-route-id="@category.Id">Delete</a>
+                <a class="btn btn-warning" asp-area="" asp-controller="Category" asp-action="CategoryUpdate" asp-route-id="@category.Id">Edit</a>
+            </div>
+        }
+    </div>
+</div>
+
+       @* -------------------Pagination---------------------*@
+
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-end">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Category" asp-action="Categories" asp-route-pg="1">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Category" asp-action="Categories" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                </li>
+
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="Category" asp-action="Categories" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Category" asp-action="Categories" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Category" asp-action="Categories" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+
+            }
+
+        </ul>
+    }
+
+</div>

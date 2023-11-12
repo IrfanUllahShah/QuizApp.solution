@@ -1,0 +1,115 @@
+﻿
+@using InfraStructure.ViewModels;
+@{
+    var Model = Context.Session.GetObject<List<QuestionVm>>("Questions");
+    ViewData["Title"] = "Attempt Quiz";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
+<link href="~/css/stylesheet.css" rel="stylesheet" />
+
+<h2 style="color:aquamarine">Attempt Quiz</h2>
+<hr />
+
+@if (ViewData["errorMsg"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@ViewData["errorMsg"]</p>
+    </div>
+}
+
+<form asp-action="SubmitQuiz" method="post" class="quiz-form">
+<div class="question-container">
+    @for (var i = 0; i < Model.Count; i++)
+    {
+        <div class="question @(i == 0 ? "active" : "")" id="question-@i">
+            <h3>Q @(i + 1): @Model[i].QText</h3>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" required name="answers[@i]" value="1" id="option1-@i">
+                    <label class="form-check-label h4" for="option1-@i">@Model[i].Ans1</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" required name="answers[@i]" value="2" id="option2-@i">
+                    <label class="form-check-label h4" for="option2-@i">@Model[i].Ans2</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" required name="answers[@i]" value="3" id="option3-@i">
+                    <label class="form-check-label h4" for="option3-@i">@Model[i].Ans3</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" required name="answers[@i]" value="4" id="option4-@i">
+                    <label class="form-check-label h4" for="option4-@i">@Model[i].Ans4</label>
+                </div>
+                <br>
+                <hr>
+                <div class="button-container">
+                    <button type="button" class="btn btn-secondary prev-btn" @(i == 0 ? "disabled" : "")>Previous</button>
+                    <button type="button" class="btn btn-success next-btn" data-current-question="@i">Next</button>
+                    <button type="submit" class="btn btn-warning submit-btn" style="display:none;">Submit</button>
+                </div>
+           
+        </div>
+    }
+</div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".next-btn").on("click", function () {
+            var currentQuestion = $(this).data("current-question");
+            var radioChecked = $('input[type="radio"][name="answers[' + currentQuestion + ']"]:checked').length > 0;
+
+            if (radioChecked) {
+                $("#question-" + currentQuestion).removeClass('active');
+                currentQuestion++;
+
+                if (currentQuestion >= @Model.Count) {
+                    currentQuestion = @Model.Count - 1;
+                }
+
+                //$(".prev-btn").prop("disabled", false);
+                if (currentQuestion !== 0) {
+                    $(".prev-btn").prop("disabled", false).addClass("success");
+                } else {
+                    $(".prev-btn").prop("disabled", true).removeClass("success");
+                }
+
+                if (currentQuestion === @Model.Count - 1) {
+                    $(".next-btn").hide();
+                    $(".submit-btn").show();
+                }
+
+                $("#question-" + currentQuestion).addClass('active');
+            } 
+            else {
+                alert("Please select an option.");
+            }
+        });
+
+        $(".prev-btn").on("click", function () {
+            var currentQuestion = $(this).data("current-question");
+            $("#question-" + currentQuestion).removeClass('active');
+            currentQuestion--;
+
+            if (currentQuestion < 0) {
+                currentQuestion = 0;
+            }
+
+            $(".next-btn").show();
+            $(".submit-btn").hide();
+
+            if (currentQuestion === 0) {
+                $(".prev-btn").prop("disabled", true);
+            }
+
+            $("#question-" + currentQuestion).addClass('active');
+        });
+    });
+</script>
+

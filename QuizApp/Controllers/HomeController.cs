@@ -13,6 +13,7 @@ namespace QuizApp.Controllers
             _logger = logger;
         }
 
+        //[Route("Home")]
         public IActionResult Index()
         {
             return View();

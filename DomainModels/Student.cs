@@ -7,15 +7,15 @@ namespace DomainModels
     {
         public Student()
         {
-            SetExams = new HashSet<SetExam>();
+            Marks = new HashSet<Mark>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public string Image { get; set; } = null!;
+        public string? Image { get; set; }
         public string Username { get; set; } = null!;
 
-        public virtual ICollection<SetExam> SetExams { get; set; }
+        public virtual ICollection<Mark> Marks { get; set; }
     }
 }

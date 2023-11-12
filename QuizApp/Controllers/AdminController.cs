@@ -3,6 +3,7 @@ using InfraStructure.Interfaces;
 using InfraStructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace QuizApp.Controllers
 {
     public class AdminController : Controller
@@ -15,22 +16,31 @@ namespace QuizApp.Controllers
         }
 
         //Action for admins Dashboard
+        [Route("Dashboard")]
         public async Task<IActionResult> Dashboard()
         {
             if (HttpContext.Session.GetString("Username") == null)
             {
-                return RedirectToAction("AdminLogin", "Login");
+                return RedirectToAction("AdminLogin", "Login", new { area = "" });
             }
             return View();
         }
 
         //Action for admins list
-        public async Task<IActionResult> Admins()
+        
+        public async Task<IActionResult> Admins(int pg = 1)
         {
-            return View(await _adminRepository.AdminsList());
+            return View(await _adminRepository.AdminsList(pg));
         }
 
         //Action for admin Create
+
+       
+        public async Task<IActionResult> AdminCreate()
+        {
+            return View();
+        }
+        [HttpPost]
         public async Task<IActionResult> AdminCreate(AdminCreateVm model)
         {
             if (ModelState.IsValid)
@@ -51,19 +61,30 @@ namespace QuizApp.Controllers
         }
 
         //Action for admin name duplication checking
-        //public async Task<IActionResult> IsNameExist(string name)
-        //{
-        //    return Json(!await _adminRepository.IsNameExist(name));
-        //}
+        public async Task<IActionResult> IsNameExist(string name)
+        {
+            return Json(!await _adminRepository.IsNameExist(name));
+        }
 
 
         //Action for admin Delete
-        //public async Task<IActionResult> AdminDelete(int id)
-        //{
-        //    return View(await _adminRepository.AdminsList());
-        //}
-
         
+        public async Task<IActionResult> AdminDelete(int id)
+        {
+            if (await _adminRepository.AdminDelete(id))
+            {
+                ModelState.AddModelError("", "Admin Delete succesfully");
+            }
+            else
+            {
+                ModelState.AddModelError("", "You can't delete last admin");
+            }
+            return RedirectToAction("Admins", new { Controller = "Admin" });
+        }
+
+
+
+
 
     }
 }

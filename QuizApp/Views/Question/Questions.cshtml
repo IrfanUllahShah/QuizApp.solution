@@ -1,0 +1,146 @@
+﻿@using InfraStructure.Pagination;
+@using InfraStructure.ViewModels;
+@model ListPagerVm<QuestionVm>
+
+
+@{
+    ViewData["Title"] = "Questions";
+    Layout = "~/Views/Shared/_LayoutTeacher.cshtml";
+}
+
+@{
+    IEnumerable<QuestionVm> m = Model.list;
+    var pagerModel = Model.pager;
+
+    //making object of Pager class and asssign properties from pagerModel
+    var pager=new Pager();
+
+    int pageNo = 0;
+    if (pagerModel != null)
+    {
+        pager = pagerModel;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<h3>Questions</h3>
+
+<p>
+    <a class="btn btn-outline-success" asp-area="" asp-controller="Question" asp-action="QuestionCreate">Add New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               #
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().QText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Ans1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Ans2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Ans3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Ans4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().CorrectAns)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.list.FirstOrDefault().Category)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (m != null && m.Count() > 0)
+        {
+            int index = 1;
+            @foreach (var item in m)
+        {
+            <tr>
+                <td>
+                    @index
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ans1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ans2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ans3)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ans4)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorrectAns)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                        <a class="btn btn-danger" asp-area="" asp-controller="Question" asp-action="QuestionDelete" asp-route-id="@item.QId">Delete</a>
+                        <a class="btn btn-warning" asp-area="" asp-controller="Question" asp-action="QuestionUpdate" asp-route-id="@item.QId">Edit</a>
+                </td>
+            </tr>
+            index++;
+        }
+        }
+        
+    </tbody>
+</table>
+
+@*---------------------------Pagination------------------------*@
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-end">
+            @if (pager.CurrentPage >1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Question" asp-action="Questions" asp-route-pg="1">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Question" asp-action="Questions" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                </li>
+
+            }
+
+            @for(var pge=pager.StartPage;pge<=pager.EndPage;pge++)
+            {
+                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="Question" asp-action="Questions" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if(pager.CurrentPage<pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Question" asp-action="Questions" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Question" asp-action="Questions" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+
+            }
+
+        </ul>
+    }
+
+</div>

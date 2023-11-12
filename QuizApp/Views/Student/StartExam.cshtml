@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Start Exam";
+}
+@{
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
+
+<h3>Start Exam</h3>
+<hr />
+@if (ViewData["errorMsg"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <h4>@ViewData["errorMsg"]</h4>
+        <h3>Your marks is = @ViewData["marks"]</h3>
+    </div>
+}
+@if (ViewData["errorMsg2"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <h4>@ViewData["errorMsg2"]</h4>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="StartExam" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label"><h6>Enter Room code</h6></label>
+                <input type="text" name="roomCode" class="form-control" required/>
+            </div>
+
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button> 
+            </div>
+        </form>
+    </div>
+</div>

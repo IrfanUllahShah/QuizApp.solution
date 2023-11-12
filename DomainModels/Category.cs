@@ -8,13 +8,14 @@ namespace DomainModels
         public Category()
         {
             Questions = new HashSet<Question>();
+            SetExams = new HashSet<SetExam>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public int? AdminId { get; set; }
+        public string Description { get; set; } = null!;
 
-        public virtual Admin? Admin { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
+        public virtual ICollection<SetExam> SetExams { get; set; }
     }
 }

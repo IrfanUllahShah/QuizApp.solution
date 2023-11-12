@@ -1,5 +1,6 @@
 ﻿using DomainModels;
 using InfraStructure.Interfaces;
+using InfraStructure.Pagination;
 using InfraStructure.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,17 +14,40 @@ namespace InfraStructure.Implementation
     public class AdminRepository: IAdminRepository
     {
         private readonly QuizAppContext db;
+        private readonly IGenericRepository _genericRepository;
 
-        public AdminRepository(QuizAppContext quizAppContext) 
+        public AdminRepository(QuizAppContext quizAppContext, IGenericRepository genericRepository) 
         {
             db = quizAppContext;
+            _genericRepository = genericRepository;
         }
 
         //Admins list
-        public async Task<IEnumerable<AdminVm>> AdminsList()
+        public async Task<ListPagerVm<AdminVm>> AdminsList(int currentPage)
         {
+            var listPager = new ListPagerVm<AdminVm>();  //make object of viewModel
+
+            // Apply pagination on records
+            var allItems = await _genericRepository.GetAll<Admin>();
+            const int pageSize = 5;
+            if (currentPage < 1)
+            {
+                currentPage = 1;
+            }
+            int recordsCount = allItems.Count;
+
+            // object of Pager class
+            var pager = new Pager(recordsCount, currentPage, pageSize);
+
+            //pager for sending to view
+            listPager.pager = pager;
+
+            //skip records
+            int recordsSkip = (currentPage - 1) * pageSize;
+
+            //select questions for view from all records
             var result = new List<AdminVm>();
-            var admins = await db.Admins.ToListAsync();
+            var admins = allItems.Skip(recordsSkip).Take(pager.PageSize).ToList();
             if (admins != null && admins.Count > 0)
             {
                 foreach (var item in admins)
@@ -35,9 +59,10 @@ namespace InfraStructure.Implementation
                         Password = item.Password,
                     });
                 }
-                return result;
+                listPager.list = result;
+                return listPager;
             }
-            return result;
+            return listPager;
         }
 
         //Create admin
@@ -49,8 +74,7 @@ namespace InfraStructure.Implementation
                 Username = model.Username,
                 Password = model.Password,
             };
-            await db.Admins.AddAsync(admin);
-            db.SaveChanges();
+           _genericRepository.Create<Admin>(admin);
             return true;
 
         }
@@ -58,22 +82,22 @@ namespace InfraStructure.Implementation
         //Name existence action
         public async Task<bool> IsNameExist(string name)
         {
-            //if (db.Admins.Where(p => p.Username.Equals(name)).Any())
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
             return await db.Admins.AnyAsync(p => p.Username.Equals(name));
         }
 
         //Delete admin
-        //public async Task<bool> AdminDelete(int id)
-        //{
-        //    var result = new List<AdminVm>();
-        //    var entity = await db.Admins.Where(p => p.Id == id).FirstOrDefaultAsync();
-        //}
+        public async Task<bool> AdminDelete(int id)
+        {
+            var result = new List<AdminVm>();
+            var admins = await _genericRepository.GetAll<Admin>();
+
+            if (admins != null && admins.Count > 1)
+            {
+                var admin = await db.Admins.Where(p => p.Id == id).FirstOrDefaultAsync();
+                _genericRepository.Delete<Admin>(admin);
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -18,9 +18,12 @@ namespace DomainModels
 
         public virtual DbSet<Admin> Admins { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Mark> Marks { get; set; } = null!;
         public virtual DbSet<Question> Questions { get; set; } = null!;
+        public virtual DbSet<QuestionLevel> QuestionLevels { get; set; } = null!;
         public virtual DbSet<SetExam> SetExams { get; set; } = null!;
         public virtual DbSet<Student> Students { get; set; } = null!;
+        public virtual DbSet<Teacher> Teachers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,16 +60,36 @@ namespace DomainModels
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.AdminId).HasColumnName("adminId");
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(25)
                     .HasColumnName("name");
+            });
 
-                entity.HasOne(d => d.Admin)
-                    .WithMany(p => p.Categories)
-                    .HasForeignKey(d => d.AdminId)
-                    .HasConstraintName("FK_Category_Admin");
+            modelBuilder.Entity<Mark>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ExamCode).HasColumnName("exam_code");
+
+                entity.Property(e => e.ExamId).HasColumnName("exam_id");
+
+                entity.Property(e => e.Marks).HasColumnName("marks");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.HasOne(d => d.Exam)
+                    .WithMany(p => p.Marks)
+                    .HasForeignKey(d => d.ExamId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Marks_SetExam");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.Marks)
+                    .HasForeignKey(d => d.StudentId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Marks_Student");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -74,9 +97,7 @@ namespace DomainModels
                 entity.HasKey(e => e.QId)
                     .HasName("PK_tbl_questions");
 
-                entity.Property(e => e.QId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("q_id");
+                entity.Property(e => e.QId).HasColumnName("q_id");
 
                 entity.Property(e => e.Ans1)
                     .HasMaxLength(25)
@@ -102,10 +123,28 @@ namespace DomainModels
 
                 entity.Property(e => e.QText).HasColumnName("q_text");
 
+                entity.Property(e => e.QuestionLevelId).HasColumnName("question-level-id");
+
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Questions_Category");
+
+                entity.HasOne(d => d.QuestionLevel)
+                    .WithMany(p => p.Questions)
+                    .HasForeignKey(d => d.QuestionLevelId)
+                    .HasConstraintName("FK_Questions_Question-Level");
+            });
+
+            modelBuilder.Entity<QuestionLevel>(entity =>
+            {
+                entity.ToTable("Question-Level");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.QuestionLevel1)
+                    .HasMaxLength(25)
+                    .HasColumnName("questionLevel");
             });
 
             modelBuilder.Entity<SetExam>(entity =>
@@ -117,22 +156,22 @@ namespace DomainModels
 
                 entity.Property(e => e.Examid).HasColumnName("examid");
 
+                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
+
                 entity.Property(e => e.ExamDate)
                     .HasColumnType("datetime")
                     .HasColumnName("exam_date");
 
-                entity.Property(e => e.ExamFkStd).HasColumnName("exam_fk_std");
+                entity.Property(e => e.ExamName).HasColumnName("exam_name");
 
-                entity.Property(e => e.ExamName)
-                    .HasMaxLength(25)
-                    .HasColumnName("exam_name");
+                entity.Property(e => e.NoOfQuestions).HasColumnName("no. of questions");
 
-                entity.Property(e => e.StdScore).HasColumnName("std_score");
+                entity.Property(e => e.RoomCode).HasColumnName("room_code");
 
-                entity.HasOne(d => d.ExamFkStdNavigation)
+                entity.HasOne(d => d.Category)
                     .WithMany(p => p.SetExams)
-                    .HasForeignKey(d => d.ExamFkStd)
-                    .HasConstraintName("FK__tbl_setEx__exam___5165187F");
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_SetExam_Category");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -158,6 +197,27 @@ namespace DomainModels
                     .HasColumnName("password");
 
                 entity.Property(e => e.Username).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Teacher>(entity =>
+            {
+                entity.ToTable("Teacher");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Image).HasColumnName("image");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(25)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(25)
+                    .HasColumnName("password");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .HasColumnName("username");
             });
 
             OnModelCreatingPartial(modelBuilder);

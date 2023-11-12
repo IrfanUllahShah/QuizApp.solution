@@ -1,0 +1,125 @@
+﻿@using InfraStructure.Pagination;
+@using InfraStructure.ViewModels;
+@model ListPagerVm<ResultVm>
+@{
+    ViewData["Title"] = "ShowResults";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@{
+    IEnumerable<ResultVm> m = Model.list;
+    var pagerModel = Model.pager;
+
+    //making object of Pager class and asssign properties from pagerModel
+    var pager = new Pager();
+
+    int pageNo = 0;
+    if (pagerModel != null)
+    {
+        pager = pagerModel;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<h3>Results</h3>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model =>  model.list.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model =>  model.list.FirstOrDefault().Marks)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model =>  model.list.FirstOrDefault().TotalMarks)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model =>  model.list.FirstOrDefault().percentage)
+            </th>
+            <th>
+               Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (m != null && m.Count() > 0)
+        {
+            int index = 1;
+            @foreach (var item in m) {
+            <tr>
+            <td>
+               @index
+             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Marks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalMarks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.percentage)%
+            </td>
+             <td>
+                @if (item.percentage >= 60)
+                {
+                    <span class="text-success">Pass</span>
+                }
+                else
+                {
+                    <span class="text-danger">Fail</span>
+                }
+            </td>
+            </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+
+@*--------------------Pagination---------------------------*@
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-end">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Exam" asp-action="ShowResults" asp-route-pg="1">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Exam" asp-action="ShowResults" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                </li>
+
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="Exam" asp-action="ShowResults" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Exam" asp-action="ShowResults" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Exam" asp-action="ShowResults" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+
+            }
+
+        </ul>
+    }
+
+</div>

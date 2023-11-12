@@ -5,12 +5,19 @@ namespace DomainModels
 {
     public partial class SetExam
     {
-        public int Examid { get; set; }
-        public DateTime? ExamDate { get; set; }
-        public int? ExamFkStd { get; set; }
-        public string ExamName { get; set; } = null!;
-        public int? StdScore { get; set; }
+        public SetExam()
+        {
+            Marks = new HashSet<Mark>();
+        }
 
-        public virtual Student? ExamFkStdNavigation { get; set; }
+        public int Examid { get; set; }
+        public string ExamName { get; set; } = null!;
+        public string? RoomCode { get; set; }
+        public int NoOfQuestions { get; set; }
+        public int? CategoryId { get; set; }
+        public DateTime? ExamDate { get; set; }
+
+        public virtual Category? Category { get; set; }
+        public virtual ICollection<Mark> Marks { get; set; }
     }
 }

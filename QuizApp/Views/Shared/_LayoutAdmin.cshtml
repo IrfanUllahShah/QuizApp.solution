@@ -6,44 +6,17 @@
     <title>@ViewData["Title"] - QuizApp</title>
     <link rel="stylesheet" href="~/theme-cyborg/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/StyleSheet.css" />
-  
+    <link href="~/summernote/summernote-bs4.min.css" rel="stylesheet" />
+   @* <link href="~/summernote/summernote-lite.min.css" rel="stylesheet" />*@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary adminNavbar" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Admin Dashboard</a>
+                <a class="navbar-brand" href="#"><h4 style="padding-left:5%">Admin Dashboard</h4></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarColor02">
-                    @*<ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                Home
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-action="Admins" asp-controller="Admin">Admins</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Students</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Questions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Set Exam</a>
-                        </li>
-                    </ul>*@
-                    @*<form class="d-flex">
-                        <a asp-action="AdminLogout" asp-controller="Login" class="btn btn-outline-info">Logout</a>
-                    </form>*@
-                </div>
             </div>
         </nav>
     </header>
@@ -56,19 +29,22 @@
                 <img src="~/Images/pic.jpg" alt="Admin Image">
                 <h4>Admin Name</h4>
             </div>
+            <hr />
             <div class="nav-links">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" asp-action="Dashboard" asp-controller="Admin">
                     Home
                     <span class="visually-hidden">(current)</span>
                 </a>
-                <a class="nav-link active" asp-action="Admins" asp-controller="Admin">Admins</a>
-                <a class="nav-link active" href="#">Categories</a>
-                <a class="nav-link active" href="#">Students</a>
-                <a class="nav-link active" href="#">Questions</a>
-                <a class="nav-link active" href="#">Set Exam</a>
-
+                <a class="nav-link active" asp-area="" asp-action="Admins" asp-controller="Admin">Admins</a>
+                <a class="nav-link active" asp-area="" asp-action="Teachers" asp-controller="Teacher">Teachers</a>
+                <a class="nav-link active" asp-area="" asp-action="Categories" asp-controller="Category">Courses</a>
+                <a class="nav-link active" asp-area="" asp-action="Students" asp-controller="Student">Students</a>
+                <a class="nav-link active" asp-area="" asp-action="Results" asp-controller="Exam">Results</a>
+                <hr>
+                <br />
+                
                 <form class="d-flex">
-                    <a asp-action="AdminLogout" asp-controller="Login" class="btn btn-light">Logout</a>
+                    <a asp-area="Login" asp-action="AdminLogout" asp-controller="Login" class="btn btn-outline-dark">Logout</a>
                 </form>
             </div>
         </div>
@@ -76,12 +52,6 @@
         <main role="main" class="col-md-10 mainBody">
             <!-- Your main content goes here -->
             @RenderBody()
-
-           @* <footer class="border-top footer text-muted">
-                <div class="container">
-                    &copy; 2023 - QuizApp - <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </div>
-            </footer>*@
         </main>
     </div>
 
@@ -89,6 +59,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @* <script src="~/summernote/summernote-lite.min.js"></script>*@
+    <script src="~/summernote/summernote-bs4.min.js"></script>
+    <a href="~/summernote/summernote-bs4.min.js.map">~/summernote/summernote-bs4.min.js.map</a>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

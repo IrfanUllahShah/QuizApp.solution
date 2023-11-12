@@ -1,5 +1,7 @@
+using AutoMapper;
 using DomainModels;
 using InfraStructure.DIConfiguration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace QuizApp
@@ -21,8 +23,7 @@ namespace QuizApp
                 options.IdleTimeout = TimeSpan.FromMinutes(20); // Session timeout period
                                                                 // Add other session options here if needed
             });
-
-
+            builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
 
@@ -34,6 +35,7 @@ namespace QuizApp
                 app.UseHsts();
             }
 
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
@@ -42,9 +44,19 @@ namespace QuizApp
 
             app.UseAuthorization();
 
-            app.MapControllerRoute(
+
+            //register areas
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+                endpoints.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+                );
+            });
 
             app.Run();
         }

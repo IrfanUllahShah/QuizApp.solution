@@ -9,8 +9,9 @@ namespace InfraStructure.Interfaces
 {
     public interface IAdminRepository
     {
-        Task<IEnumerable<AdminVm>> AdminsList();
+        Task<ListPagerVm<AdminVm>> AdminsList(int currentPage);
         Task<bool> AdminCreate(AdminCreateVm model);
         Task<bool> IsNameExist(string name);
+        Task<bool> AdminDelete(int id);
     }
 }

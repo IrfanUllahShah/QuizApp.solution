@@ -10,7 +10,7 @@ namespace InfraStructure.ViewModels
     public class LoginVm
     {
         [Display(Name = "Username")]
-        [Required(ErrorMessage ="Username is required.")]
+        [Required(ErrorMessage = "Username is required.")]
         public string username { get; set; } = null!;
 
         [Display(Name = "Password")]

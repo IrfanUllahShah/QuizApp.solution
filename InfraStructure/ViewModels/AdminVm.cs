@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Xml.Linq;
-using Xunit;
 
 namespace InfraStructure.ViewModels
 {
@@ -19,7 +16,7 @@ namespace InfraStructure.ViewModels
 
     public class AdminCreateVm
     {
-        [Remote("IsNameExist","Admin ", ErrorMessage = "Name already exists!")]
+       // [Remote("IsNameExist","Admin ", ErrorMessage = "Name already exists!")]
         [Display(Name = "Username")]
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; } = null!;

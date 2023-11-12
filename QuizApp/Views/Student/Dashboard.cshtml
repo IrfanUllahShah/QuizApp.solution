@@ -4,9 +4,10 @@
 
 @{
     ViewData["Title"] = "Student Dashboard";
+    var username = Context.Session.GetString("Username");
 }
 
 
 <div class="text-center">
-    <h1 class="display-4">Welcome @TempData["Username"]</h1>
+    <h1 class="display-4">Welcome @username</h1>
 </div>

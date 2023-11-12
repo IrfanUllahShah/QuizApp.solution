@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Result";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
+
+<h3>Result</h3>
+<hr />
+
+@if (ViewData["errorMsg"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@ViewData["errorMsg"]</p>
+    </div>
+}
+
+@if (ViewData["Marks"] != null && TempData["quiz"] != null)
+{
+    // Retrieve total number of questions from TempData
+    var totalQuestions = Convert.ToInt32(TempData["quiz"]);
+
+    // Calculate the passing threshold (60% of total questions)
+    var passingMarks = (int)(totalQuestions * 0.6);
+
+    // Retrieve user's marks from ViewData
+    var userMarks = Convert.ToInt32(ViewData["Marks"]);
+
+    <div class="alert @((userMarks >= passingMarks) ? "alert-success" : "alert-danger")" role="alert">
+        <h4>You scored: @userMarks out of @totalQuestions.</h4>
+
+        @if (userMarks >= passingMarks)
+        {
+            <p>Congratulations! You passed the quiz!</p>
+        }
+        else
+        {
+            <p>Sorry, you did not pass the quiz. Better luck next time.</p>
+        }
+    </div>
+
+
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <p>No marks available.</p>
+    </div>
+}

@@ -1,0 +1,36 @@
+﻿@using InfraStructure.ViewModels;
+
+@model LoginVm
+
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="row" style="margin-top:10%">
+    <div class="col-md-4 mx-auto" style="border:2px solid white;border-radius:3%;padding:2% 2%">
+        <h3 class="text-center">Login</h3>
+        @using (Html.BeginForm("AdminLogin", "Login", FormMethod.Post))
+        {
+            <div class="text-danger validation-summary-errors"></div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.username, new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.username, new { @class = "form-control" })
+                <span class="text-danger">@Html.ValidationMessageFor(model => model.username)</span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.password, new { @class = "control-label" })
+                @Html.PasswordFor(model => model.password, new { @class = "form-control" })
+                <span class="text-danger">@Html.ValidationMessageFor(model => model.password)</span>
+                <p style="color:red">@ViewBag.errorMessage</p>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-outline-dark" />
+            </div>
+        }
+    </div>
+</div>

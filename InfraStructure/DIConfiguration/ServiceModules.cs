@@ -13,7 +13,14 @@ namespace InfraStructure.DIConfiguration
     {
         public static void Regsiter(IServiceCollection services)
         {
-            services.AddTransient<IAdminRepository,AdminRepository>();
+            services.AddTransient<IGenericRepository, GenericRepository>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IQuestionRepository, QuestionRepository>();
+            services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<ITeacherRepository, TeacherRepository>();
+            services.AddTransient<IQuizRepository, QuizRepository>();
+
         }
     }
 }

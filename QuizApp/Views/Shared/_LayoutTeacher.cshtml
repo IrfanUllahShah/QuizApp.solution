@@ -1,0 +1,70 @@
+﻿@*@model InfraStructure.ViewModels.TeacherVm*@
+
+
+@{
+    var m = Context.Session.GetObject<InfraStructure.ViewModels.TeacherVm>("TeacherData");
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QuizApp</title>
+    <link rel="stylesheet" href="~/theme-cyborg/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/StyleSheet.css" />
+    <script type="text/javascript" src="~/js/JavaScript.js"></script>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary adminNavbar" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><h4 style="padding-left:5%">Teacher Dashboard</h4></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid" style="display: flex;">
+        <div class="col-md-2 sidebar">
+            <div class="admin-info">
+                <img class="studentImage" decoding="async" src="@("~/Images/"+m.Image)" asp-append-version="true" style="height:100px;width:100px;border-radius:50%" alt="Student Image" />
+                <h4>@m.Name</h4>
+            </div>
+            <hr />
+            <div class="nav-links">
+                <a class="nav-link active" asp-action="Dashboard" asp-controller="Teacher">
+                    Home
+                    <span class="visually-hidden">(current)</span>
+                </a>
+                <a class="nav-link active" asp-action="TeacherDetailsForTeacher" asp-controller="Teacher" asp-route-id="@m.Id">Profile</a>
+                <a class="nav-link active" asp-action="TeacherUpdateForTeacher" asp-controller="Teacher" asp-route-id="@m.Id">Edit Profile</a>
+               @* <a class="nav-link active" asp-action="Students" asp-controller="Student">Students</a>*@
+                <a class="nav-link active" asp-action="Questions" asp-controller="Question">Questions</a>
+                <a class="nav-link active" asp-action="SetExamList" asp-controller="Exam">Set Exam</a>
+                <a class="nav-link active" asp-action="Results2" asp-controller="Exam">Results</a>
+                <hr>
+                <br />
+
+                <form class="d-flex">
+                    <a asp-area="Login" asp-action="TeacherLogout" asp-controller="Login" class="btn btn-outline-dark">Logout</a>
+                </form>
+            </div>
+        </div>
+
+        <main role="main" class="col-md-10 mainBody">
+            <!-- Your main content goes here -->
+            @RenderBody()
+
+        </main>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
