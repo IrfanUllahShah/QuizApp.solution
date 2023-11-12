@@ -51,10 +51,10 @@ namespace QuizApp.Controllers
         }
 
         //Action for admin name duplication checking
-        public async Task<IActionResult> IsNameExist(string name)
-        {
-            return Json(!await _adminRepository.IsNameExist(name));
-        }
+        //public async Task<IActionResult> IsNameExist(string name)
+        //{
+        //    return Json(!await _adminRepository.IsNameExist(name));
+        //}
 
 
         //Action for admin Delete
